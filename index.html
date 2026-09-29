@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Year 1 Keyboard Adventure</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f8ff;
+    margin: 0;
+    text-align: center;
+    color: #183153;
+  }
+  .wrap { max-width: 900px; margin: auto; padding: 20px; }
+  h1 { font-size: 38px; margin: 10px 0; }
+  .subtitle { font-size: 22px; }
+  .card {
+    background: white;
+    border-radius: 22px;
+    padding: 25px;
+    margin: 20px 0;
+    box-shadow: 0 4px 14px rgba(0,0,0,.12);
+  }
+  .word {
+    font-size: 58px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    margin: 20px;
+  }
+  input {
+    font-size: 34px;
+    padding: 12px 18px;
+    width: 80%;
+    max-width: 600px;
+    border: 4px solid #b8c9e8;
+    border-radius: 15px;
+    text-align: center;
+  }
+  button {
+    font-size: 24px;
+    padding: 12px 24px;
+    margin: 10px 5px;
+    border: 0;
+    border-radius: 14px;
+    cursor: pointer;
+    background: #3f73c9;
+    color: white;
+  }
+  button:hover { transform: scale(1.03); }
+  .message { font-size: 28px; min-height: 45px; font-weight: bold; }
+  .score { font-size: 24px; }
+  .keyboard {
+    display: grid;
+    gap: 6px;
+    margin: 20px auto;
+    max-width: 760px;
+  }
+  .key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 45px;
+    background: #e7edf8;
+    border: 2px solid #b8c9e8;
+    border-radius: 7px;
+    font-weight: bold;
+    font-size: 18px;
+  }
+  .row { display: flex; gap: 5px; justify-content: center; }
+  .row .key { width: 7%; }
+  .row:nth-child(3) .key:first-child { width: 9%; }
+  .row:nth-child(3) .key:last-child { width: 9%; }
+  .space { width: 45% !important; }
+  .hidden { display: none; }
+  .nameBox { font-size: 30px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>⌨️ Keyboard Adventure</h1>
+  <div class="subtitle">Year 1 — Let's learn to type!</div>
+
+  <div class="card">
+    <h2>1. What is a keyboard for?</h2>
+    <p class="nameBox">A keyboard helps us type <b>letters</b>, <b>words</b> and <b>numbers</b>.</p>
+    <p>Click the button when you are ready.</p>
+    <button onclick="showGame()">Start typing!</button>
+  </div>
+
+  <div id="game" class="card hidden">
+    <h2>2. Type the word</h2>
+    <p>Look at the word. Find the letters on your keyboard.</p>
+    <div id="word" class="word"></div>
+    <input id="answer" autocomplete="off" autocapitalize="off" spellcheck="false"
+           aria-label="Type the word">
+    <br>
+    <button onclick="checkAnswer()">Check ✓</button>
+    <button onclick="newWord()">New word ↻</button>
+    <div id="message" class="message"></div>
+    <div class="score">⭐ Stars: <span id="score">0</span></div>
+
+    <h3>Keyboard helper</h3>
+    <div class="keyboard">
+      <div class="row">
+        <span class="key">Q</span><span class="key">W</span><span class="key">E</span>
+        <span class="key">R</span><span class="key">T</span><span class="key">Y</span>
+        <span class="key">U</span><span class="key">I</span><span class="key">O</span><span class="key">P</span>
+      </div>
+      <div class="row">
+        <span class="key">A</span><span class="key">S</span><span class="key">D</span>
+        <span class="key">F</span><span class="key">G</span><span class="key">H</span>
+        <span class="key">J</span><span class="key">K</span><span class="key">L</span>
+      </div>
+      <div class="row">
+        <span class="key">Z</span><span class="key">X</span><span class="key">C</span>
+        <span class="key">V</span><span class="key">B</span><span class="key">N</span>
+        <span class="key">M</span>
+      </div>
+      <div class="row"><span class="key space">SPACE</span></div>
+    </div>
+  </div>
+
+  <div id="nameGame" class="card">
+    <h2>3. Type your name</h2>
+    <p>Click in the box and type your name.</p>
+    <input id="nameInput" placeholder="Type your name here">
+    <p id="nameMessage" class="message"></p>
+  </div>
+
+  <div class="card">
+    <h2>🏆 Can you remember?</h2>
+    <p>Keyboard → typing → letters and words</p>
+    <p><b>Well done, keyboard explorer!</b></p>
+  </div>
+</div>
+
+<script>
+const words = ["cat", "dog", "sun", "hat", "book", "fish", "red", "bus", "star", "pen"];
+let current = "";
+let score = 0;
+
+function showGame() {
+  document.getElementById("game").classList.remove("hidden");
+  document.getElementById("answer").focus();
+  newWord();
+}
+
+function newWord() {
+  current = words[Math.floor(Math.random() * words.length)];
+  document.getElementById("word").textContent = current;
+  document.getElementById("answer").value = "";
+  document.getElementById("message").textContent = "";
+  document.getElementById("answer").focus();
+}
+
+function checkAnswer() {
+  const answer = document.getElementById("answer").value.trim().toLowerCase();
+  const message = document.getElementById("message");
+
+  if (!answer) {
+    message.textContent = "⌨️ Type the word first!";
+    return;
+  }
+
+  if (answer === current) {
+    score++;
+    document.getElementById("score").textContent = score;
+    message.textContent = "🌟 Great typing!";
+    setTimeout(newWord, 900);
+  } else {
+    message.textContent = "👀 Try again. Look at the word!";
+  }
+}
+
+document.getElementById("answer").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") checkAnswer();
+});
+
+document.getElementById("nameInput").addEventListener("input", function() {
+  const msg = document.getElementById("nameMessage");
+  if (this.value.trim()) {
+    msg.textContent = "🎉 You typed your name!";
+  } else {
+    msg.textContent = "";
+  }
+});
+</script>
+</body>
+</html>
